@@ -19,15 +19,15 @@ public class EmployeeMapper {
         );
 }
 
-// This method maps employeeDTO toemployee JPA entity.
+// This method maps employeeDTO to employee JPA entity.
 
-public static Employee mapToEmployeeJpaEntity(EmployeeDTO employeeDto){
+public static Employee mapToEmployeeJpaEntity(EmployeeDTO employeeDTO){
 
     return new Employee(
-        employeeDto.getId(),
-        employeeDto.getFirstName(),
-        employeeDto.getLastName(),
-        employeeDto.getEmail()
+        employeeDTO.getId(),
+        employeeDTO.getFirstName(),
+        employeeDTO.getLastName(),
+        employeeDTO.getEmail()
     );
 
 }

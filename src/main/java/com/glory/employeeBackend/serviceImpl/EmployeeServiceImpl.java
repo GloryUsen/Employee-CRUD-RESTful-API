@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.glory.employeeBackend.dto.EmployeeDTO;
 import com.glory.employeeBackend.entity.Employee;
+import com.glory.employeeBackend.exception.ResourceNotFoundException;
 import com.glory.employeeBackend.mapper.EmployeeMapper;
 import com.glory.employeeBackend.repository.EmployeeRepository;
 import com.glory.employeeBackend.service.EmployeeService;
@@ -34,6 +35,23 @@ public class EmployeeServiceImpl  implements EmployeeService{
             // Now we need to convert the saved employee entity back to DTO and return it.
          return EmployeeMapper.mapToEmplyeeDTO(savedEmployee);
 
+    }
+
+    @Override
+    public EmployeeDTO getEmployeeById(Long employeeId) {
+        /**  Before implemting the method, first create custom exception class, whenever an employee with a given
+         *  id dosn't exist in the db, the program throws an exception error message. */
+
+         Employee employee = employeeRepository.findById(employeeId)
+         .orElseThrow(() -> 
+         new ResourceNotFoundException("Employee doesn't exist with the given id: " + employeeId));
+
+
+         // Converting JPA entity into DTO and return it.
+        return EmployeeMapper.mapToEmplyeeDTO(employee);
+
+
+        
     }
 }
 
