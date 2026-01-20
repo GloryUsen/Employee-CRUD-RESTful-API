@@ -5,7 +5,7 @@ import com.glory.employeeBackend.entity.Employee;
 
 public class EmployeeMapper {
     // This method maps employee JPA entity to employeeDTO.
-    public static EmployeeDTO mapToEmplyeeDTO(Employee employee){
+    public static EmployeeDTO mapToEmployeeDTO(Employee employee){
 
         return new EmployeeDTO(
             /** Getting all the employeeDTO fields from the JPA and setting the fields to employeeDTO.

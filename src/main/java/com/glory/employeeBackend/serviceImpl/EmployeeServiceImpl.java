@@ -1,5 +1,8 @@
 package com.glory.employeeBackend.serviceImpl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.glory.employeeBackend.dto.EmployeeDTO;
@@ -9,14 +12,18 @@ import com.glory.employeeBackend.mapper.EmployeeMapper;
 import com.glory.employeeBackend.repository.EmployeeRepository;
 import com.glory.employeeBackend.service.EmployeeService;
 
-import lombok.AllArgsConstructor;
+
 
 @Service
-@AllArgsConstructor
+
 public class EmployeeServiceImpl  implements EmployeeService{
 
     // Injecting dependencies
     private EmployeeRepository employeeRepository;
+
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
     // Instead of creating the constructor manually, we use annotation up.
 
@@ -33,7 +40,7 @@ public class EmployeeServiceImpl  implements EmployeeService{
 
 
             // Now we need to convert the saved employee entity back to DTO and return it.
-         return EmployeeMapper.mapToEmplyeeDTO(savedEmployee);
+         return EmployeeMapper.mapToEmployeeDTO(savedEmployee);
 
     }
 
@@ -48,10 +55,44 @@ public class EmployeeServiceImpl  implements EmployeeService{
 
 
          // Converting JPA entity into DTO and return it.
-        return EmployeeMapper.mapToEmplyeeDTO(employee);
+        return EmployeeMapper.mapToEmployeeDTO(employee);
+}
 
+    @Override
+    public List<EmployeeDTO> getAllEmployees() {
+        List<Employee> employees = employeeRepository.findAll();
 
-        
+     return employees.stream().map((employee) -> EmployeeMapper.mapToEmployeeDTO(employee))
+     .collect(Collectors.toList());
+}
+
+    @Override
+    public EmployeeDTO updateEmployee(Long employeeId, EmployeeDTO updatedEmployee) {
+       Employee employee =  employeeRepository.findById(employeeId)
+       .orElseThrow(() -> new ResourceNotFoundException(
+        "The mployee with the given id is not found:" + employeeId
+       ));
+
+// Setting all the fields or details of the updatedEmployee 
+
+       employee.setFirstName(updatedEmployee.getFirstName());
+       employee.setLastName(updatedEmployee.getLastName());
+       employee.setEmail(updatedEmployee.getEmail());
+
+       Employee updatedEmployeeObj = employeeRepository.save(employee);
+
+        return EmployeeMapper.mapToEmployeeDTO(updatedEmployeeObj);
     }
+
+    @Override
+    public void deleteEmployee(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+        .orElseThrow(() -> new ResourceNotFoundException("Employee With the given id is not found:" + employeeId));
+         employeeRepository.deleteById(employeeId);
+    
+
+
+}
+
 }
 
